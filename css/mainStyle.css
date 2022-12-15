@@ -1,0 +1,11 @@
+@font-face {
+  font-family: iran-yekan;
+  font-style: normal;
+  src: url(../resources/font/IRANYekan.ttf);
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: iran-yekan;
+}
