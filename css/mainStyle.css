@@ -8,4 +8,107 @@
   padding: 0;
   box-sizing: border-box;
   font-family: iran-yekan;
+  direction: rtl;
 }
+
+body {
+  background-color: #f3f3ed;
+}
+
+/* ************************** */
+/* Header and nav bar styles */
+#nav {
+  background-color: #29294f;
+  color: #f3f3ed;
+}
+.navbar-text-color {
+  color: #f3f3ed;
+}
+#name {
+  font-size: 1.5rem;
+}
+
+#icon {
+  font-size: 4rem;
+}
+#position {
+  font-size: 0.9rem;
+}
+.hamburger-btn {
+  font-size: 4rem;
+  transition: 0.25s;
+}
+.hamburger-btn:hover {
+  color: #e64d8a;
+}
+
+#new-user {
+  background-color: transparent;
+  border: none;
+  color: #f3f3ed;
+  font-size: 1.5rem;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  transition: 0.25s;
+}
+#new-user:hover {
+  background-color: #f3f3ed;
+  cursor: pointer;
+  color: #e64d8a;
+}
+
+/* ********************** */
+/* main section data desings */
+
+#main span {
+  font-size: 1.5rem;
+  color: #29294f;
+}
+#main input {
+  border-radius: 5px;
+  border: 1px solid #29294f;
+  padding: 0.2rem 0.5rem;
+  background-color: #d9d9d9;
+  font-size: 1.5rem;
+}
+#main #user-id-block #user-id {
+  background-color: white;
+}
+#main {
+  border-bottom: 1px solid #29294f;
+}
+#user-id-block {
+  gap: 2.9rem;
+}
+.dis-gap {
+  gap: 1rem;
+  align-items: center;
+}
+#user-operation-block {
+  background-color: #f3f3ed;
+  border: 1px solid #29294f;
+  border-radius: 5px;
+  gap: 1rem;
+  font-size: 1.75rem;
+}
+.operation-btn {
+  background-color: transparent;
+  border: none;
+  color: #29294f;
+  transition: 0.25s;
+}
+.operation-btn:hover {
+  cursor: pointer;
+  color: #e64d8a;
+}
+
+/* *********************** */
+/* Report section desings */
+
+#report {
+  font-size: 1.1rem;
+  gap: 0.5rem;
+}
+
+/* ******************** */
+/* User Submit section */
