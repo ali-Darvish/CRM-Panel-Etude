@@ -40,6 +40,8 @@ function formValidation() {
     }).length !== 0
   ) {
     newUserValidationMsg.innerHTML = "این شماره متعلق به کاربر دیگری است.";
+  } else if (JSON.parse(localStorage.getItem("customers")).length === 0) {
+    console.log("faiure");
   } else {
     newUserValidationMsg.innerHTML = "";
     acceptUserData();
