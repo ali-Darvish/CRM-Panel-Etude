@@ -164,12 +164,14 @@ body {
 }
 .line {
   width: 1px;
-  height: 20px;
+  height: 10px;
+  margin: 0 auto;
   background-color: #f12577;
 }
+
 .rectangle {
-  width: 100px;
-  height: 40px;
+  padding: 2px;
+  width: 200px;
   border: 1px solid #f12577;
   background-color: #e64d8a;
 }
@@ -179,6 +181,49 @@ body {
   flex-direction: column;
   align-items: center;
 }
+.flex-alignCenter {
+  display: flex;
+  align-items: center;
+}
 .display-none {
   display: none;
+}
+
+#report-container {
+  list-style-type: none;
+  padding: 0;
+}
+.reportLine {
+  width: 10px;
+  height: 1px;
+  margin: 0 auto;
+  background-color: #f12577;
+}
+.reportRectangle {
+  text-align: center;
+  border-radius: 8px;
+  color: white;
+  padding: 2px;
+  width: 120px;
+  border: 1px solid #f12577;
+  background-color: #e64d8a;
+}
+.reportFlowOutRectangle {
+  text-align: center;
+  border-radius: 8px;
+  padding: 2px;
+  width: 120px;
+  border: 1px solid red;
+}
+
+#report-diagram-item {
+  width: 100%;
+  border-bottom: 1px solid #29294f;
+  padding: 10px 0;
+  border-radius: 8px;
+}
+
+#report-diagram-item:hover {
+  background-color: #d9d9d9;
+  cursor: pointer;
 }

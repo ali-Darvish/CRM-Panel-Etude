@@ -139,10 +139,10 @@
             <span>عملیات:</span>
             <div id="user-operation-block" class="d-flex px-3 py-2">
               <button
-                id="cr-submit-btn"
+                id="cr-submitForm-btn"
                 class="glyphicon glyphicon-earphone operation-btn"
                 aria-hidden="true"
-                data-bs-toggle="modal"
+                data-bs-toggle=""
                 data-bs-target="#cr-submit-form"
               ></button>
               <button
@@ -159,7 +159,70 @@
       </section>
       <section id="report" class="container-fluid d-flex flex-column">
         <div id="report-title">دیاگرام پیگیری های اخیر:</div>
-        <div id="report-container">گزارشی موجود نیست!</div>
+        <ul id="report-diagram-list">
+          <li
+            id="report-diagram-item"
+            class="d-flex justify-content-center align-items-center"
+          >
+            <div
+              class="diagram-circle rounded-circle d-flex justify-content-center align-items-center text-white"
+            >
+              شروع
+            </div>
+            <div id="report-d-one" class="flex-alignCenter">
+              <div class="reportLine"></div>
+              <div class="reportRectangle d-flex flex-column">
+                <small>علت تماس مشتری:</small>
+                تاخیر پیک وندور
+              </div>
+            </div>
+            <div id="report-d-two" class="flex-alignCenter">
+              <div class="reportLine"></div>
+              <div class="reportRectangle d-flex flex-column">
+                <small>نحوه اعلام تاخیر:</small>
+                ثبت تیکت
+              </div>
+            </div>
+            <div id="report-d-three" class="flex-alignCenter">
+              <div class="reportLine"></div>
+              <div class="reportRectangle d-flex flex-column">
+                <small>تکرار تاخیر:</small>
+                تاخیر سوم و یا بیشتر
+              </div>
+            </div>
+            <div id="report-d-four" class="flex-alignCenter">
+              <div class="reportLine"></div>
+              <div class="reportRectangle d-flex flex-column">
+                <small>وضعیت ارسال سفارش توسط وندور:</small>
+                تحویل تا 5 دقیقه دیگر
+              </div>
+            </div>
+            <div id="report-d-five" class="flex-alignCenter">
+              <div class="reportLine"></div>
+              <div class="reportRectangle d-flex flex-column">
+                <small>درخواست مشتری:</small>
+                منتظر می مانند
+              </div>
+            </div>
+            <div id="report-flow-out" class="flex-alignCenter">
+              <div class="reportLine"></div>
+              <div
+                class="reportFlowOutRectangle bg-danger text-white d-flex flex-column"
+              >
+                <small>توضیحات خروج از فلوچارت:</small>
+                توضیحات تستی بابت خروج از فلوچارت
+              </div>
+            </div>
+            <div id="reportFinish" class="flex-alignCenter">
+              <div class="reportLine"></div>
+              <div
+                class="diagram-circle rounded-circle d-flex justify-content-center align-items-center text-white"
+              >
+                پایان
+              </div>
+            </div>
+          </li>
+        </ul>
       </section>
     </article>
     <!-- User submit form start-->
@@ -274,7 +337,7 @@
                 id="cr-form"
                 class="container d-flex flex-column justify-content-between ch-100"
               >
-                <div id="callReasonList" class="form-group">
+                <div id="callReasonList" class="form-group callReasonList">
                   <label for="reason-select">علت تماس مشتری:</label>
                   <select
                     name="reason-select"
@@ -284,15 +347,19 @@
                     <option value="default">
                       ------ علت تماس مشتری ------
                     </option>
-                    <option value="vendorDelay">تاخیر پیک وندور</option>
-                    <option value="expressDelay">تاخیر پیک اکسپرس</option>
-                    <option value="orderCancel">درخواست کنسلی سفارش</option>
-                    <option value="changeOrder">درخواست ویرایش سفارش</option>
+                    <option value="تاخیر پیک وندور">تاخیر پیک وندور</option>
+                    <option value="تاخیر پیک اکسپرس">تاخیر پیک اکسپرس</option>
+                    <option value="درخواست کنسلی سفارش">
+                      درخواست کنسلی سفارش
+                    </option>
+                    <option value="درخواست ویرایش سفارش">
+                      درخواست ویرایش سفارش
+                    </option>
                   </select>
                 </div>
                 <div
-                  id="vendorDelay-reportType"
-                  class="form-group flex-column-align-center display-none"
+                  id="delay-reportType"
+                  class="delay-reportType resetForm form-group flex-column-align-center display-none"
                 >
                   <span class="align-self-start">نحوه اعلام تاخیر:</span>
                   <div
@@ -305,24 +372,131 @@
                     >
                       <input
                         type="radio"
-                        name="vendorDelay-reportType"
+                        name="delay-reportType"
                         id="incoming"
-                        value="incoming"
+                        value="تماس ورودی"
                       />
                       <label for="incoming">تماس ورودی</label>
                     </div>
                     <div class="form-check form-check-inline">
                       <input
                         type="radio"
-                        name="vendorDelay-reportType"
+                        name="delay-reportType"
                         id="ticket"
-                        value="ticket"
+                        value="ثبت تیکت"
                       />
                       <label for="ticket">ثبت تیکت</label>
                     </div>
                   </div>
                 </div>
-                <div id="vendorDelayStatus" class="form-group display-none">
+
+                <div
+                  id="delayRepeat"
+                  class="delayRepeat resetForm form-group flex-column-align-center display-none"
+                >
+                  <span class="align-self-start">تکرار تاخیر:</span>
+                  <div
+                    id="container"
+                    class="d-flex justify-content-center mt-5"
+                  >
+                    <div
+                      id="delayRepeatBtn"
+                      class="form-check form-check-inline"
+                    >
+                      <input
+                        type="radio"
+                        name="delayRepeat"
+                        id="firstDelay"
+                        value="تاخیر اول"
+                      />
+                      <label for="firstDelay">تاخیر اول</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="delayRepeat"
+                        id="secondDelay"
+                        value="تاخیر دوم"
+                      />
+                      <label for="secondDelay">تاخیر دوم</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="delayRepeat"
+                        id="thirdDelay"
+                        value="تاخیر سوم"
+                      />
+                      <label for="thirdDelay">تاخیر سوم و بیشتر</label>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="exDeliveryStatus"
+                  class="form-group exDeliveryStatus resetForm display-none"
+                >
+                  <label for="exDeliveryStatus-select">وضعیت پیک اکسپرس:</label>
+                  <select
+                    name="exDeliveryStatus-select"
+                    id="exDeliveryStatus-select"
+                    class="form-control font-size-1-2"
+                  >
+                    <option value="default">
+                      ------ وضعیت پیک اکسپرس ------
+                    </option>
+                    <option value="undefined">undefined</option>
+                    <option value="assigned">ASSIGNED</option>
+                    <option value="requested">REQUESTED</option>
+                    <option value="ack">ACK</option>
+                    <option value="atRestaurant">AT RESTAURANT</option>
+                    <option value="atDropOff">ARRIVED AT DROPOFF</option>
+                    <option value="delivered">DELIVERED</option>
+                    <option value="canceled">CANCELED</option>
+                    <option value="سفارش برگشت خورده است">
+                      سفارش برگشت خورده است
+                    </option>
+                  </select>
+                </div>
+
+                <div
+                  id="exDelay-vendorSend"
+                  class="exDelay-vendorSend resetForm form-group flex-column-align-center display-none"
+                >
+                  <span class="align-self-start"
+                    >بررسی وضعیت ارسال توسط وندور:</span
+                  >
+                  <div
+                    id="container"
+                    class="d-flex justify-content-center mt-5"
+                  >
+                    <div
+                      id="exDelay-vendorSendBtn"
+                      class="form-check form-check-inline"
+                    >
+                      <input
+                        type="radio"
+                        name="exDelay-vendorSend"
+                        id="send"
+                        value="وندور امکان ارسال دارد"
+                      />
+                      <label for="send">وندور امکان ارسال دارد</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="exDelay-vendorSend"
+                        id="notSend"
+                        value="عدم امکان ارسال"
+                      />
+                      <label for="notSend">عدم امکان ارسال</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  id="vendorDelayStatus"
+                  class="form-group display-none vendorDelayStatus resetForm"
+                >
                   <label for="reason-select"
                     >وضعیت ارسال سفارش توسط وندور:</label
                   >
@@ -334,38 +508,113 @@
                     <option value="default">
                       ------ وضعیت ارسال سفارش ------
                     </option>
-                    <option value="vendorDelay">تحویل تا 5 دقیقه آینده</option>
-                    <option value="expressDelay">
+                    <option value="تحویل تا 5 دقیقه آینده">
+                      تحویل تا 5 دقیقه آینده
+                    </option>
+                    <option value="تحویل تا 10 دقیقه آینده">
                       تحویل تا 10 دقیقه آینده
                     </option>
-                    <option value="orderCancel">
+                    <option value="تحویل تا 15 دقیقه آینده">
+                      تحویل تا 15 دقیقه آینده
+                    </option>
+                    <option value="تحویل تا 20 دقیقه آینده">
+                      تحویل تا 20 دقیقه آینده
+                    </option>
+                    <option value="تحویل تا 25 دقیقه آینده">
+                      تحویل تا 25 دقیقه آینده
+                    </option>
+                    <option value="تحویل تا 30 دقیقه آینده">
+                      تحویل تا 30 دقیقه آینده
+                    </option>
+                    <option value="عدم امکان ارسال و کنسلی سفارش">
                       عدم امکان ارسال و کنسلی سفارش
                     </option>
-                    <option value="changeOrder">سفارش برگشت خورده است</option>
+                    <option value="سفارش برگشت خورده است">
+                      سفارش برگشت خورده است
+                    </option>
                   </select>
                 </div>
-                <div class="card bg-light" id="cr-hint">
+                <div
+                  id="delayCustomerAsk"
+                  class="delayCustomerAsk resetForm form-group flex-column-align-center display-none"
+                >
+                  <span class="align-self-start">درخواست مشتری:</span>
+                  <div
+                    id="container"
+                    class="d-flex justify-content-center mt-5"
+                  >
+                    <div
+                      id="delayCustomerAskBtn"
+                      class="form-check form-check-inline"
+                    >
+                      <input
+                        type="radio"
+                        name="delayCustomerAsk"
+                        id="delayWait"
+                        value="منتظر می مانند"
+                      />
+                      <label for="delayWait">منتظر می مانند</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="delayCustomerAsk"
+                        id="delayCancel"
+                        value="سفارش کنسل شود"
+                      />
+                      <label for="delayCancel">سفارش کنسل شود</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="card bg-light text-justify" id="cr-hint">
                   <div
                     class="card-header d-flex justify-content-between bg-primary text-light"
                   >
                     توجه
                     <i class="glyphicon glyphicon-info-sign"></i>
                   </div>
-                  <div class="card-body">
+                  <div class="card-body callReasonList">
                     <div class="card-text text-dark">
                       لطفا از بین گزینه های فوق علت تماس مشتری و پیگیری خود را
                       مشخص کرده و سپس روی گزینه "بعدی" کلیک کنید!
                     </div>
                   </div>
-                  <div class="card-body display-none">
+                  <div
+                    class="card-body delay-reportType resetForm display-none"
+                  >
                     <div class="card-text text-dark">
                       در این بخش لطفا نحوه اعلام تاخیر توسط مشتری را مشخص کرده و
                       روی گزینه بعدی کلیک کنید!
                     </div>
                   </div>
-                  <div class="card-body display-none">
+                  <div class="card-body delayRepeat resetForm display-none">
                     <div class="card-text text-dark">
-                      <strong>اسکریپت تماس ورودی:</strong><br />
+                      در این بخش باید مرتبه تکرار اعلام تاخیر توسط مشتری را مشخص
+                      کرده و سپس روی گزینه بعدی کلیک کنید!
+                    </div>
+                  </div>
+                  <div
+                    class="card-body exDeliveryStatus resetForm display-none"
+                  >
+                    <div class="card-text text-dark">
+                      در این مرحله باید از پنل اکسپرس وضعیت پیک اکسپرس را مشخص و
+                      از لیست بالا انتخاب کنید. سپس روی گزینه بعدی کلیک کنید!
+                    </div>
+                  </div>
+                  <div
+                    class="card-body exDelay-vendorSend resetForm display-none"
+                  >
+                    <div class="card-text text-dark">
+                      در این مرحله با وندور تماس گرفته و امکان ارسال سفارش توسط
+                      ایشان را بررسی کنید. پس از انتخاب وضعیت روی گزینه بعدی
+                      کلیک کنید!
+                    </div>
+                  </div>
+                  <div
+                    class="card-body vendorDelayStatus display-none resetForm"
+                  >
+                    <div class="card-text text-dark">
+                      <strong>اسکریپت تماس ورودی/ ثبت تیکت:</strong><br />
                       در این مرحله با وندور تماس گرفته و وضعیت سفارش را بررسی
                       بفرمایید. <br />
                       <strong>اسکریپ تماس با وندور:</strong> <br />
@@ -374,43 +623,100 @@
                       وضعیت ارسال سفارش ایشون رو بفرمایید" <br />
                     </div>
                   </div>
+                  <div
+                    class="card-body delayCustomerAsk resetForm display-none"
+                  >
+                    <div class="card-text text-dark">
+                      <strong>تماس با مشتری:</strong><br />
+                      در این مرحله با مشتری تماس گرفته و پس از اعلام وضعیت
+                      سفارش، درخواست ایشان را پرسیده و بعد از انتخاب گزینه
+                      مربوطه روی گزینه بعدی کلیک کنید. <br />
+                      <strong>اسکریپ تماس با مشتری:</strong> <br />
+                      "سلام آقا / خانم ......از اسنپ فود تماس میگیرم. بابت تاخیر
+                      پیش آمده در سفارش شما پیگیری با مجموعه انجام و طبق اعلام
+                      ایشان، سفارش تا ... دقیقه آینده به دست شما خواهد رسید.
+                      ضمنا در صورت عدم تمایل به دریافت سفارش امکان کنسل کردن
+                      سفارش نیز وجود دارد." <br />
+                    </div>
+                  </div>
                 </div>
 
                 <div class="form-group d-flex justify-content-between">
-                  <button type="button" class="btn btn-outline-primary col-2">
+                  <button
+                    type="button"
+                    id="cr-pre-btn"
+                    class="btn btn-outline-primary col-2"
+                  >
                     قبلی
                   </button>
-                  <button type="button" class="btn btn-primary col-2">
+                  <button
+                    type="button"
+                    id="cr-finish-btn"
+                    class="btn btn-outline-success col-2 display-none"
+                  >
+                    اتمام
+                  </button>
+                  <button
+                    type="button"
+                    id="cr-next-btn"
+                    class="btn btn-primary col-2"
+                  >
                     بعدی
                   </button>
                 </div>
               </form>
+              <p
+                id="crValidationMsg"
+                class="text-danger"
+                style="margin-top: -15px; text-align: center"
+              ></p>
             </div>
             <div
               id="submit-diagram"
-              class="col-5 container d-flex flex-column align-items-center"
+              class="col-5 container d-flex flex-column align-items-center align-self-center"
             >
               <div
                 class="rounded-circle diagram-circle d-flex justify-content-center align-items-center text-white"
               >
                 شروع
               </div>
-              <div class="diagram-rectangle display-none">
+              <div id="d-one" class="display-none resetForm">
                 <div class="line"></div>
                 <div
                   class="rectangle rounded d-flex flex-column justify-content-center align-items-center text-white"
-                >
-                  <small>علت تماس:</small>
-                  تاخیر پیک وندور
-                </div>
+                ></div>
               </div>
-              <div class="diagram-rectangle display-none">
+              <div id="d-two" class="display-none resetForm">
                 <div class="line"></div>
                 <div
                   class="rectangle rounded d-flex flex-column justify-content-center align-items-center text-white"
+                ></div>
+              </div>
+              <div id="d-three" class="display-none resetForm">
+                <div class="line"></div>
+                <div
+                  class="rectangle rounded d-flex flex-column justify-content-center align-items-center text-white"
+                ></div>
+              </div>
+
+              <div id="d-four" class="display-none resetForm">
+                <div class="line"></div>
+                <div
+                  class="rectangle rounded d-flex flex-column justify-content-center align-items-center text-white"
+                ></div>
+              </div>
+              <div id="d-five" class="display-none resetForm">
+                <div class="line"></div>
+                <div
+                  class="rectangle rounded d-flex flex-column justify-content-center align-items-center text-white"
+                ></div>
+              </div>
+              <div id="finishDiagram" class="display-none resetForm">
+                <div class="line"></div>
+                <div
+                  class="rounded-circle diagram-circle d-flex justify-content-center align-items-center text-white"
                 >
-                  <small>نحوه اعلام تاخیر:</small>
-                  تماس ورودی
+                  پایان
                 </div>
               </div>
             </div>
@@ -418,15 +724,28 @@
           <div class="modal-footer">
             <div class="col-12 d-flex justify-content-between">
               <button
+                id="cr-close-btn"
                 type="button"
                 class="btn btn-outline-danger col-2"
-                onclick="document.querySelector('#cr-form').reset()"
                 data-bs-toggle="modal"
                 data-bs-target="#cr-submit-form"
               >
                 انصراف
               </button>
-              <button type="submit" class="btn btn-success col-2">
+              <button
+                type="button"
+                id="flow-out"
+                class="btn btn-outline-primary col-2"
+              >
+                خروج از فلوچارت
+              </button>
+              <button
+                type="button"
+                id="cr-submit-btn"
+                class="btn btn-success col-2 disabled"
+                data-bs-target="cr-submit-form"
+                data-bs-toggle="modal"
+              >
                 ثبت نهایی
               </button>
             </div>
