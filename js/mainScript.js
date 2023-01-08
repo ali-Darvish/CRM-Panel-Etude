@@ -17,14 +17,10 @@ const submitUserBtn = document.querySelector("#new-user-submit-btn");
 const closeUserBtn = document.querySelector("#new-user-close-btn");
 
 let customers = [];
-(() => {
-  customers = JSON.parse(localStorage.getItem("customers")) || [];
-})();
+customers = JSON.parse(localStorage.getItem("customers")) || [];
 
 let callReasonData = [];
-(() => {
-  callReasonData = JSON.parse(localStorage.getItem("callReasonData")) || [];
-})();
+callReasonData = JSON.parse(localStorage.getItem("callReasonData")) || [];
 
 submitUserBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -123,6 +119,10 @@ let delayRepeat = document.querySelectorAll(".delayRepeat");
 
 let exDeliveryStatus = document.querySelectorAll(".exDeliveryStatus");
 let exDelayVendorSend = document.querySelectorAll(".exDelay-vendorSend");
+let exSpentTime = document.querySelectorAll(".exSpentTime");
+let exOrderStatus = document.querySelectorAll(".exOrderStatus");
+let exGivenTime = document.querySelectorAll(".exGivenTime");
+let returnedResend = document.querySelectorAll(".returnedResend");
 
 // Form components
 let crNext = document.querySelector("#cr-next-btn");
@@ -142,8 +142,34 @@ let diagramTwo = document.querySelector("#d-two");
 let diagramThree = document.querySelector("#d-three");
 let diagramFour = document.querySelector("#d-four");
 let diagramFive = document.querySelector("#d-five");
+let diagramSix = document.querySelector("#d-six");
+let diagramSeven = document.querySelector("#d-seven");
+let diagramEight = document.querySelector("#d-eight");
+let diagramNine = document.querySelector("#d-nine");
 
 crNext.addEventListener("click", (e) => {
+  // ------ درخواست مشتری اکسپرس ------
+  if (
+    !delayCustomerAsk[0].classList.contains("display-none") &&
+    document.getElementById("callReason").value === "تاخیر پیک اکسپرس"
+  ) {
+    if (
+      !document.getElementById("delayWait").checked &&
+      !document.getElementById("delayCancel").checked
+    ) {
+      callReasonValidationMsg("لطفا درخواست مشتری را مشخص کنید");
+      return;
+    }
+    if (document.getElementById("delayWait").checked) {
+      reasonHide(delayCustomerAsk);
+      diagramShow(diagramSeven, "منتظر می مانند", "درخواست مشتری");
+      reasonShow(exGivenTime);
+      crNext.classList.add("display-none");
+      crFinish.classList.remove("display-none");
+      return;
+    }
+  }
+
   // ------ وضعیت ارسال سفارش توسط وندور ------
   if (!vendorDelayStatus[0].classList.contains("display-none")) {
     if (
@@ -152,6 +178,7 @@ crNext.addEventListener("click", (e) => {
       callReasonValidationMsg("لطفا وضعیت ارسال سفارش را مشخص کنید.");
       return;
     }
+    console.log("test");
     crNext.classList.add("display-none");
     crFinish.classList.remove("display-none");
     switch (vendorDelayStatus[0].getElementsByTagName("select")[0].value) {
@@ -225,12 +252,90 @@ crNext.addEventListener("click", (e) => {
     }
   }
 
+  // -------------- وضعیت سفارش در وندور -----------
+
+  if (!exOrderStatus[0].classList.contains("display-none")) {
+    if (
+      !document.getElementById("inVendor").checked &&
+      !document.getElementById("withDelivery").checked
+    ) {
+      callReasonValidationMsg("لطفا وضعیت سفارش را مشخص کنید!");
+      return;
+    }
+    reasonHide(exOrderStatus);
+    reasonShow(delayCustomerAsk);
+    if (document.getElementById("inVendor").checked) {
+      diagramShow(diagramSix, "در وندور مانده است", "وضعیت سفارش");
+      return;
+    }
+    if (document.getElementById("withDelivery").checked) {
+      diagramShow(diagramSix, "تحویل پیک شده است", "وضعیت سفارش");
+      return;
+    }
+  }
+
+  // -------------- زمان سپری شده در وضعیت -----------
+
+  if (!exSpentTime[0].classList.contains("display-none")) {
+    if (
+      !document.getElementById("lower45").checked &&
+      !document.getElementById("higher45").checked
+    ) {
+      callReasonValidationMsg("لطفا زمان سپری شده را مشخص کنید!");
+      return;
+    }
+    if (document.getElementById("lower45").checked) {
+      diagramShow(diagramFive, "کمتر از 45 دقیقه", "زمان سپری شده");
+      reasonShow(delayCustomerAsk);
+      reasonHide(exSpentTime);
+      return;
+    }
+
+    if (document.getElementById("higher45").checked) {
+      diagramShow(diagramFive, "بیشتر از 45 دقیقه", "زمان سپری شده");
+      reasonShow(exOrderStatus);
+      reasonHide(exSpentTime);
+      return;
+    }
+  }
+
+  // -------------- وضعیت ارسال توسط وندور -----------
+
+  if (!exDelayVendorSend[0].classList.contains("display-none")) {
+    if (
+      !document.getElementById("send").checked &&
+      !document.getElementById("notSend").checked
+    ) {
+      callReasonValidationMsg("لطفا امکان ارسال وندور را مشخص کنید.");
+    }
+    reasonHide(exDelayVendorSend);
+    reasonShow(delayCustomerAsk);
+    exVendorSendHide();
+    if (document.getElementById("send").checked) {
+      diagramShow(
+        diagramFive,
+        document.getElementById("send").value,
+        "وضعیت ارسال توسط وندور"
+      );
+      return;
+    }
+    if (document.getElementById("notSend").checked) {
+      diagramShow(
+        diagramFive,
+        document.getElementById("notSend").value,
+        "وضعیت ارسال توسط وندور"
+      );
+      return;
+    }
+  }
+
   // -------------- وضعیت پنل اکسپرس -----------
   if (!exDeliveryStatus[0].classList.contains("display-none")) {
     if (
       exDeliveryStatus[0].getElementsByTagName("select")[0].value === "default"
     ) {
       callReasonValidationMsg("لطفا وضعیت پیک اکسپرس را مشخص کنید");
+      return;
     }
     switch (exDeliveryStatus[0].getElementsByTagName("select")[0].value) {
       case "undefined":
@@ -249,6 +354,9 @@ crNext.addEventListener("click", (e) => {
       case "ack":
       case "atRestaurant":
       case "atDropOff":
+      case "picked":
+        reasonHide(exDeliveryStatus);
+        reasonShow(exSpentTime);
         diagramShow(
           diagramFour,
           exDeliveryStatus[0]
@@ -258,6 +366,8 @@ crNext.addEventListener("click", (e) => {
         );
         break;
       case "delivered":
+        reasonHide(exDeliveryStatus);
+        reasonShow(exOrderStatus);
         diagramShow(
           diagramFour,
           exDeliveryStatus[0]
@@ -267,6 +377,9 @@ crNext.addEventListener("click", (e) => {
         );
         break;
       case "canceled":
+        reasonHide(exDeliveryStatus);
+        reasonShow(delayCustomerAsk);
+        document.getElementById("delayWait").disabled = true;
         diagramShow(
           diagramFour,
           exDeliveryStatus[0]
@@ -276,6 +389,10 @@ crNext.addEventListener("click", (e) => {
         );
         break;
       case "سفارش برگشت خورده است":
+        reasonHide(exDeliveryStatus);
+        reasonShow(returnedResend);
+        crNext.classList.add("display-none");
+        crFinish.classList.remove("display-none");
         diagramShow(
           diagramFour,
           exDeliveryStatus[0]
@@ -366,8 +483,9 @@ crNext.addEventListener("click", (e) => {
       crList[0].getElementsByTagName("select")[0].value === "تاخیر پیک اکسپرس"
     ) {
       if (reportTypes[0].checked) {
-        // reasonHide(delayReportType);
-        // diagramShow(diagramTwo, "تماس ورودی", "نحوه اعلام تاخیر");
+        reasonHide(delayReportType);
+        reasonShow(exDeliveryStatus);
+        diagramShow(diagramTwo, "تماس ورودی", "نحوه اعلام تاخیر");
         return;
       }
       if (reportTypes[1].checked) {
@@ -397,6 +515,8 @@ crNext.addEventListener("click", (e) => {
         break;
       case "درخواست کنسلی سفارش":
       case "درخواست ویرایش سفارش":
+        reasonShow(crList);
+        break;
     }
     crPre.removeAttribute("disabled");
   }
@@ -438,19 +558,119 @@ crPre.addEventListener("click", (e) => {
       return;
     }
   }
-  if (!exDeliveryStatus[0].classList.contains("display-none")) {
+
+  if (
+    !exDeliveryStatus[0].classList.contains("display-none") &&
+    delayReportType[0].getElementsByTagName("input")[1].checked
+  ) {
+    document.getElementById("exDeliveryStatus-select").value = "default";
     reasonHide(exDeliveryStatus);
     diagramHide(diagramThree);
     reasonShow(delayRepeat);
     return;
   }
+  if (
+    !exDeliveryStatus[0].classList.contains("display-none") &&
+    delayReportType[0].getElementsByTagName("input")[0].checked
+  ) {
+    document.getElementById("exDeliveryStatus-select").value = "default";
+    reasonHide(exDeliveryStatus);
+    diagramHide(diagramTwo);
+    reasonShow(delayReportType);
+    return;
+  }
+
   if (!exDelayVendorSend[0].classList.contains("display-none")) {
     reasonHide(exDelayVendorSend);
     diagramHide(diagramFour);
     reasonShow(exDeliveryStatus);
+    document.getElementById("send").checked = false;
+    document.getElementById("notSend").checked = false;
+    exVendorSendHide();
     return;
   }
+
+  if (!exSpentTime[0].classList.contains("display-none")) {
+    document.getElementById("lower45").checked = false;
+    document.getElementById("higher45").checked = false;
+    reasonHide(exSpentTime);
+    diagramHide(diagramFour);
+    reasonShow(exDeliveryStatus);
+    return;
+  }
+
+  if (!exOrderStatus[0].classList.contains("display-none")) {
+    document.getElementById("inVendor").checked = false;
+    document.getElementById("withDelivery").checked = false;
+    reasonHide(exOrderStatus);
+    if (document.getElementById("higher45").checked) {
+      diagramHide(diagramFive);
+      reasonShow(exSpentTime);
+      return;
+    }
+    if (
+      document.getElementById("exDeliveryStatus-select").value === "delivered"
+    ) {
+      diagramHide(diagramFour);
+      reasonShow(exDeliveryStatus);
+      return;
+    }
+  }
+  if (!returnedResend[0].classList.contains("display-none")) {
+    document.getElementById("returnExpress").checked = false;
+    document.getElementById("returnInPerson").checked = false;
+    crFinish.classList.add("display-none");
+    crNext.classList.remove("display-none");
+    returnResendExpressHide();
+    reasonHide(returnedResend);
+    reasonShow(exDeliveryStatus);
+    diagramHide(diagramFour);
+
+    diagramHide(diagramFive);
+    finishDiagram.classList.add("display-none");
+    crSubmitBtn.classList.add("disabled");
+  }
+
   if (!delayCustomerAsk[0].classList.contains("display-none")) {
+    document.getElementById("delayWait").checked = false;
+    document.getElementById("delayCancel").checked = false;
+    delayCancelHide();
+    diagramHide(diagramNine);
+    finishDiagram.classList.add("display-none");
+
+    if (
+      document.getElementById("inVendor").checked ||
+      document.getElementById("withDelivery").checked
+    ) {
+      reasonHide(delayCustomerAsk);
+      reasonShow(exOrderStatus);
+      diagramHide(diagramSix);
+      return;
+    }
+
+    if (
+      document.getElementById("exDeliveryStatus-select").value === "canceled"
+    ) {
+      diagramHide(diagramFour);
+      reasonHide(delayCustomerAsk);
+      reasonShow(exDeliveryStatus);
+      return;
+    }
+    if (document.getElementById("lower45").checked) {
+      diagramHide(diagramFive);
+      reasonHide(delayCustomerAsk);
+      reasonShow(exSpentTime);
+      return;
+    }
+    if (
+      document.getElementById("send").checked ||
+      document.getElementById("notSend").checked
+    ) {
+      diagramHide(diagramFive);
+      reasonHide(delayCustomerAsk);
+      reasonShow(exDelayVendorSend);
+      return;
+    }
     if (!diagramFive.classList.contains("display-none")) {
       diagramHide(diagramFive);
       diagramHide(finishDiagram);
@@ -471,9 +691,46 @@ crPre.addEventListener("click", (e) => {
     reasonShow(vendorDelayStatus);
     return;
   }
+  if (!exGivenTime[0].classList.contains("display-none")) {
+    if (finishDiagram.classList.contains("display-none")) {
+      crFinish.classList.add("display-none");
+      crNext.classList.remove("display-none");
+      document.getElementById("givenTime-select").value = "default";
+      reasonShow(delayCustomerAsk);
+      reasonHide(exGivenTime);
+      diagramHide(diagramSeven);
+      return;
+    } else {
+      crFinish.classList.add("display-none");
+      crNext.classList.remove("display-none");
+      document.getElementById("givenTime-select").value = "default";
+      reasonShow(delayCustomerAsk);
+      reasonHide(exGivenTime);
+      diagramHide(diagramSeven);
+      diagramHide(diagramEight);
+      finishDiagram.classList.add("display-none");
+    }
+  }
 });
 
 crFinish.addEventListener("click", (e) => {
+  if (!returnedResend[0].classList.contains("display-none")) {
+    if (
+      !document.getElementById("returnInPerson").checked &&
+      !document.getElementById("returnExpress").checked
+    ) {
+      callReasonValidationMsg("لطفا نحوه دریافت مجدد را مشخص کنید");
+      return;
+    }
+    crSubmitBtn.classList.remove("disabled");
+    if (document.getElementById("returnInPerson").checked) {
+      diagramShow(diagramFive, "دریافت توسط مشتری", "نحوه دریافت مجدد");
+    }
+    if (document.getElementById("returnExpress").checked) {
+      diagramShow(diagramFive, "ارسال توسط پیک اکسپرس", "نحوه دریافت مجدد");
+    }
+    finishDiagram.classList.remove("display-none");
+  }
   if (!delayCustomerAsk[0].classList.contains("display-none")) {
     let askInputs = delayCustomerAsk[0].getElementsByTagName("input");
     if (!askInputs[0].checked && !askInputs[1].checked) {
@@ -482,18 +739,44 @@ crFinish.addEventListener("click", (e) => {
       );
       return;
     }
-    if (askInputs[0].checked) {
-      diagramShow(diagramFive, "منتظر می مانند", "درخواست مشتری");
-      finishDiagram.classList.remove("display-none");
-      crSubmitBtn.classList.remove("disabled");
+    if (document.getElementById("callReason").value === "تاخیر پیک وندور") {
+      if (askInputs[0].checked) {
+        diagramShow(diagramFive, "منتظر می مانند", "درخواست مشتری");
+        finishDiagram.classList.remove("display-none");
+        crSubmitBtn.classList.remove("disabled");
+        return;
+      }
+      if (askInputs[1].checked) {
+        diagramShow(diagramFive, "سفارش کنسل شود", "درخواست مشتری");
+        crSubmitBtn.classList.remove("disabled");
+        finishDiagram.classList.remove("display-none");
+        return;
+      }
+    }
+    if (document.getElementById("callReason").value === "تاخیر پیک اکسپرس") {
+      if (askInputs[1].checked) {
+        diagramShow(diagramNine, "سفارش کنسل شود", "درخواست مشتری");
+        crSubmitBtn.classList.remove("disabled");
+        finishDiagram.classList.remove("display-none");
+        return;
+      }
+    }
+  }
+  if (
+    document.getElementById("callReason").value === "تاخیر پیک اکسپرس" &&
+    !exGivenTime[0].classList.contains("display-none")
+  ) {
+    if (document.getElementById("givenTime-select").value === "default") {
+      callReasonValidationMsg("لطفا زمان داده شده را مشخص کنید.");
       return;
     }
-    if (askInputs[1].checked) {
-      diagramShow(diagramFive, "سفارش کنسل شود", "درخواست مشتری");
-      crSubmitBtn.classList.remove("disabled");
-      finishDiagram.classList.remove("display-none");
-      return;
-    }
+    diagramShow(
+      diagramEight,
+      document.getElementById("givenTime-select").value,
+      "زمان داده شده"
+    );
+    crSubmitBtn.classList.remove("disabled");
+    finishDiagram.classList.remove("display-none");
   }
 });
 crCloseBtn.addEventListener("click", (e) => {
@@ -502,7 +785,6 @@ crCloseBtn.addEventListener("click", (e) => {
 let crSubmitFormBtn = document.querySelector("#cr-submitForm-btn");
 
 crSubmitFormBtn.addEventListener("click", (e) => {
-  // e.preventDefault();
   logUserData(customerID.value);
   if (logUserData(customerID.value)) {
     crSubmitFormBtn.setAttribute("data-bs-toggle", "modal");
@@ -517,6 +799,7 @@ crSubmitBtn.addEventListener("click", (e) => {
   let cNumber = customerID.value;
   acceptCallReasonData({ customerNumber: cNumber });
   localStorage.setItem("callReasonData", JSON.stringify(callReasonData));
+  logUserReports(cNumber);
   crHardReset();
 });
 
@@ -538,17 +821,63 @@ function acceptCallReasonData(inputObj) {
 /***************************************************
  * Functions Section
  */
+function delayCancelShow() {
+  if (document.getElementById("callReason").value === "تاخیر پیک اکسپرس") {
+    let cancelHint = document.querySelectorAll(".exCancel");
+    for (const el of cancelHint) {
+      el.classList.remove("display-none");
+    }
+    crNext.classList.add("display-none");
+    crFinish.classList.remove("display-none");
+  }
+}
+function delayCancelHide() {
+  if (document.getElementById("callReason").value === "تاخیر پیک اکسپرس") {
+    let cancelHint = document.querySelectorAll(".exCancel");
+    for (const el of cancelHint) {
+      el.classList.add("display-none");
+    }
+    crFinish.classList.add("display-none");
+    crNext.classList.remove("display-none");
+  }
+}
+
+function returnResendExpressShow() {
+  let expressSend = document.querySelectorAll(".returnedResendTicket");
+  for (const el of expressSend) {
+    el.classList.remove("display-none");
+  }
+}
+function returnResendExpressHide() {
+  let expressSend = document.querySelectorAll(".returnedResendTicket");
+  for (const el of expressSend) {
+    el.classList.add("display-none");
+  }
+}
+
+function exVendorSendShow() {
+  let vendorSend = document.querySelectorAll(".exVendorSendTicket");
+  for (const el of vendorSend) {
+    el.classList.remove("display-none");
+  }
+}
+function exVendorSendHide() {
+  let vendorSend = document.querySelectorAll(".exVendorSendTicket");
+  for (const el of vendorSend) {
+    el.classList.add("display-none");
+  }
+}
+
 function logUserData(CID) {
   userName.value = "";
   userTel.value = "";
   userStatus.value = "";
   userType.value = "";
 
-  let userArray = JSON.parse(localStorage.getItem("customers")).filter(
-    (user) => {
-      return user.newTel === CID;
-    }
-  );
+  let userArray = JSON.parse(localStorage.getItem("customers")) || [];
+  userArray = userArray.filter((user) => {
+    return user.newTel === CID;
+  });
   if (CID === "") {
     idValidationMsg.innerHTML = "لطفا شماره مشتری را وارد کنید!";
   } else if (userArray.length === 0) {
@@ -560,45 +889,80 @@ function logUserData(CID) {
     userTel.value = user.newTel;
     userStatus.value = user.status;
     userType.value = user.type;
-    // logUserReports(CID);
+    logUserReports(CID);
     return true;
   }
 }
 
-let reportDiagramList = document.querySelector("#report-diagram-list");
 function logUserReports(CID) {
-  let userReports = callReasonData.filter(
-    (item) => item.customerNumber === CID
-  );
-  let reportRow = document.createElement("li");
-  reportRow.setAttribute("id", "report-diagram-item");
-  reportRow.classList = "d-flex justify-content-center align-items-center";
-  let reportStart = document.createElement("div");
-  reportStart.classList =
-    "diagram-circle rounded-circle d-flex justify-content-center align-items-center text-white";
-  reportStart.innerHTML = `شروع`;
-  let reportFinish = document.createElement("div");
-  reportFinish.classList = "flex-alignCenter";
-  reportFinish.setAttribute("id", "reportFinish");
-  reportFinish.innerHTML = `<div class="reportLine"></div>
+  let reportDiagramList = document.querySelector("#report-diagram-list");
+  reportDiagramList.innerHTML = "";
+  let userReports = callReasonData
+    .filter((item) => item.customerNumber === CID)
+    .reverse();
+  if (userReports.length === 0) {
+    reportDiagramList.innerHTML = "دیاگرامی جهت نمایش موجود نیست";
+  }
+  for (const report of userReports) {
+    let reportRow = document.createElement("li");
+    reportRow.setAttribute("id", "report-diagram-item");
+    reportRow.classList = "d-flex justify-content-center align-items-center";
+    reportDiagramList.appendChild(reportRow);
+    let reportStart = document.createElement("div");
+    reportStart.classList =
+      "diagram-circle rounded-circle d-flex justify-content-center align-items-center text-white";
+    reportStart.innerHTML = `شروع`;
+    let reportFinish = document.createElement("div");
+    reportFinish.classList = "flex-alignCenter";
+    reportFinish.setAttribute("id", "reportFinish");
+    reportFinish.innerHTML = `<div class="reportLine"></div>
   <div
     class="diagram-circle rounded-circle d-flex justify-content-center align-items-center text-white"
   >
     پایان
   </div>`;
-  for (const report of userReports) {
-    reportDiagramList.appendChild(reportRow);
     reportRow.appendChild(reportStart);
     for (const reason in report) {
       switch (reason) {
         case "reason-select":
-          reportDiagram(reportRow, reason, report[reason]);
+          reportDiagram(reportRow, "دلیل تماس مشتری", report[reason]);
+          break;
+        case "delay-reportType":
+          reportDiagram(reportRow, "نحوه اعلام تاخیر", report[reason]);
+          break;
+        case "delayRepeat":
+          reportDiagram(reportRow, "تکرار تاخیر", report[reason]);
+          break;
+        case "exDeliveryStatus-select":
+          reportDiagram(reportRow, "وضعیت پیک اکسپرس", report[reason]);
+          break;
+        case "returnedResend":
+          reportDiagram(reportRow, "نحوه دریافت مجدد", report[reason]);
+          break;
+        case "exDelay-vendorSend":
+          reportDiagram(reportRow, "امکان ارسال توسط وندور", report[reason]);
+          break;
+        case "exSpentTime":
+          reportDiagram(reportRow, "زمان سپری شده", report[reason]);
+          break;
+        case "exOrderStatus":
+          reportDiagram(reportRow, "وضعیت سفارش در وندور", report[reason]);
+          break;
+        case "vendorSendStatus-select":
+          reportDiagram(reportRow, "وضعیت ارسال سفارش", report[reason]);
+          break;
+        case "delayCustomerAsk":
+          reportDiagram(reportRow, "درخواست مشتری", report[reason]);
+          break;
+        case "exGivenTime-select":
+          reportDiagram(reportRow, "زمان داده شده", report[reason]);
+          break;
       }
     }
     reportRow.appendChild(reportFinish);
   }
 }
-// logUserReports("09186322235");
+
 function reportDiagram(parent, title, text) {
   let diagram = document.createElement("div");
   diagram.classList = "flex-alignCenter";
@@ -609,6 +973,7 @@ function reportDiagram(parent, title, text) {
   </div>`;
   parent.appendChild(diagram);
 }
+
 function crHardReset() {
   let formComponents = document.querySelectorAll(".resetForm");
   reasonShow(crList);
@@ -617,6 +982,7 @@ function crHardReset() {
       item.classList.add("display-none");
     }
   }
+
   crFinish.classList.add("display-none");
   crNext.classList.remove("display-none");
   crPre.setAttribute("disabled", "true");

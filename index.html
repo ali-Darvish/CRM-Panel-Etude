@@ -160,68 +160,7 @@
       <section id="report" class="container-fluid d-flex flex-column">
         <div id="report-title">دیاگرام پیگیری های اخیر:</div>
         <ul id="report-diagram-list">
-          <li
-            id="report-diagram-item"
-            class="d-flex justify-content-center align-items-center"
-          >
-            <div
-              class="diagram-circle rounded-circle d-flex justify-content-center align-items-center text-white"
-            >
-              شروع
-            </div>
-            <div id="report-d-one" class="flex-alignCenter">
-              <div class="reportLine"></div>
-              <div class="reportRectangle d-flex flex-column">
-                <small>علت تماس مشتری:</small>
-                تاخیر پیک وندور
-              </div>
-            </div>
-            <div id="report-d-two" class="flex-alignCenter">
-              <div class="reportLine"></div>
-              <div class="reportRectangle d-flex flex-column">
-                <small>نحوه اعلام تاخیر:</small>
-                ثبت تیکت
-              </div>
-            </div>
-            <div id="report-d-three" class="flex-alignCenter">
-              <div class="reportLine"></div>
-              <div class="reportRectangle d-flex flex-column">
-                <small>تکرار تاخیر:</small>
-                تاخیر سوم و یا بیشتر
-              </div>
-            </div>
-            <div id="report-d-four" class="flex-alignCenter">
-              <div class="reportLine"></div>
-              <div class="reportRectangle d-flex flex-column">
-                <small>وضعیت ارسال سفارش توسط وندور:</small>
-                تحویل تا 5 دقیقه دیگر
-              </div>
-            </div>
-            <div id="report-d-five" class="flex-alignCenter">
-              <div class="reportLine"></div>
-              <div class="reportRectangle d-flex flex-column">
-                <small>درخواست مشتری:</small>
-                منتظر می مانند
-              </div>
-            </div>
-            <div id="report-flow-out" class="flex-alignCenter">
-              <div class="reportLine"></div>
-              <div
-                class="reportFlowOutRectangle bg-danger text-white d-flex flex-column"
-              >
-                <small>توضیحات خروج از فلوچارت:</small>
-                توضیحات تستی بابت خروج از فلوچارت
-              </div>
-            </div>
-            <div id="reportFinish" class="flex-alignCenter">
-              <div class="reportLine"></div>
-              <div
-                class="diagram-circle rounded-circle d-flex justify-content-center align-items-center text-white"
-              >
-                پایان
-              </div>
-            </div>
-          </li>
+          دیاگرامی جهت نمایش موجود نیست
         </ul>
       </section>
     </article>
@@ -448,6 +387,7 @@
                     <option value="assigned">ASSIGNED</option>
                     <option value="requested">REQUESTED</option>
                     <option value="ack">ACK</option>
+                    <option value="picked">PICKED</option>
                     <option value="atRestaurant">AT RESTAURANT</option>
                     <option value="atDropOff">ARRIVED AT DROPOFF</option>
                     <option value="delivered">DELIVERED</option>
@@ -456,6 +396,43 @@
                       سفارش برگشت خورده است
                     </option>
                   </select>
+                </div>
+
+                <div
+                  id="returnedResend"
+                  class="returnedResend resetForm form-group flex-column-align-center display-none"
+                >
+                  <span class="align-self-start"
+                    >نحوه دریافت مجدد سفارش برگشتی:</span
+                  >
+                  <div
+                    id="container"
+                    class="d-flex justify-content-center mt-5"
+                  >
+                    <div
+                      id="returnedResendBtn"
+                      class="form-check form-check-inline"
+                    >
+                      <input
+                        type="radio"
+                        name="returnedResend"
+                        id="returnInPerson"
+                        value="دریافت توسط مشتری"
+                        onchange="returnResendExpressHide()"
+                      />
+                      <label for="returnInPerson">دریافت توسط مشتری</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="returnedResend"
+                        id="returnExpress"
+                        value="ارسال مجدد توسط اکسپرس"
+                        onchange="returnResendExpressShow()"
+                      />
+                      <label for="returnExpress">ارسال مجدد توسط اکسپرس</label>
+                    </div>
+                  </div>
                 </div>
 
                 <div
@@ -478,6 +455,7 @@
                         name="exDelay-vendorSend"
                         id="send"
                         value="وندور امکان ارسال دارد"
+                        onchange="exVendorSendShow()"
                       />
                       <label for="send">وندور امکان ارسال دارد</label>
                     </div>
@@ -487,8 +465,78 @@
                         name="exDelay-vendorSend"
                         id="notSend"
                         value="عدم امکان ارسال"
+                        onchange="exVendorSendHide()"
                       />
                       <label for="notSend">عدم امکان ارسال</label>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="exSpentTime"
+                  class="exSpentTime resetForm form-group flex-column-align-center display-none"
+                >
+                  <span class="align-self-start"
+                    >زمان سپری شده در وضعیت مشخص شده:</span
+                  >
+                  <div
+                    id="container"
+                    class="d-flex justify-content-center mt-5"
+                  >
+                    <div
+                      id="exSpentTimeBtn"
+                      class="form-check form-check-inline"
+                    >
+                      <input
+                        type="radio"
+                        name="exSpentTime"
+                        id="lower45"
+                        value="کمتر از 45 دقیقه"
+                      />
+                      <label for="lower45">کمتر از 45 دقیقه</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="exSpentTime"
+                        id="higher45"
+                        value="بیشتر از 45 دقیقه"
+                      />
+                      <label for="higher45">بیشتر از 45 دقیقه</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  id="exOrderStatus"
+                  class="exOrderStatus resetForm form-group flex-column-align-center display-none"
+                >
+                  <span class="align-self-start"
+                    >بررسی وضعیت سفارش با وندور:</span
+                  >
+                  <div
+                    id="container"
+                    class="d-flex justify-content-center mt-5"
+                  >
+                    <div
+                      id="exOrderStatusBtn"
+                      class="form-check form-check-inline"
+                    >
+                      <input
+                        type="radio"
+                        name="exOrderStatus"
+                        id="inVendor"
+                        value="داخل وندور جا مانده است"
+                      />
+                      <label for="inVendor">داخل وندور جا مانده است</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        type="radio"
+                        name="exOrderStatus"
+                        id="withDelivery"
+                        value="تحویل پیک شده است"
+                      />
+                      <label for="withDelivery">تحویل پیک شده است</label>
                     </div>
                   </div>
                 </div>
@@ -552,6 +600,7 @@
                         name="delayCustomerAsk"
                         id="delayWait"
                         value="منتظر می مانند"
+                        onchange="delayCancelHide()"
                       />
                       <label for="delayWait">منتظر می مانند</label>
                     </div>
@@ -561,11 +610,32 @@
                         name="delayCustomerAsk"
                         id="delayCancel"
                         value="سفارش کنسل شود"
+                        onchange="delayCancelShow()"
                       />
                       <label for="delayCancel">سفارش کنسل شود</label>
                     </div>
                   </div>
                 </div>
+                <div
+                  id="exGivenTime"
+                  class="form-group display-none exGivenTime resetForm"
+                >
+                  <label for="reason-select">زمان داده شده:</label>
+                  <select
+                    name="exGivenTime-select"
+                    id="givenTime-select"
+                    class="form-control font-size-1-2"
+                  >
+                    <option value="default">------ زمان داده شده ------</option>
+                    <option value="5 دقیقه">5 دقیقه</option>
+                    <option value="10 دقیقه">10 دقیقه</option>
+                    <option value="15 دقیقه">15 دقیقه</option>
+                    <option value="20 دقیقه">20 دقیقه</option>
+                    <option value="25 دقیقه">25 دقیقه</option>
+                    <option value="30 دقیقه">30 دقیقه</option>
+                  </select>
+                </div>
+
                 <div class="card bg-light text-justify" id="cr-hint">
                   <div
                     class="card-header d-flex justify-content-between bg-primary text-light"
@@ -601,6 +671,32 @@
                       از لیست بالا انتخاب کنید. سپس روی گزینه بعدی کلیک کنید!
                     </div>
                   </div>
+                  <div class="card-body returnedResend resetForm display-none">
+                    <div class="card-text text-dark">
+                      تماس با مشتری <br />
+                      در اینجا باید با مشتری تماس گرفته و توضیحات و دلیل برگشت
+                      خوردن سفارش را اعلام کنید. سپس با توجه به درخواست مشتری و
+                      انتخاب گزینه مربوطه روی گزینه بعدی کلیک کنید.
+                    </div>
+                  </div>
+
+                  <div class="card-body exSpentTime resetForm display-none">
+                    <div class="card-text text-dark">
+                      زمان سپرس شده در وضعیت مشخص شده! <br />
+                      مدت زمانی که سفارش در وضعیت مشخص شده باقی مانده است را
+                      مشخص و بعد از انتخاب گزینه روی گزینه بعدی کلیک کنید.
+                    </div>
+                  </div>
+
+                  <div class="card-body exOrderStatus resetForm display-none">
+                    <div class="card-text text-dark">
+                      بررسی وضعیت سفارش در وندور: <br />
+                      در این مرحله باید با وندور بررسی کنید که آیا سفارش تحویل
+                      پیک شده یا هنوز در وندور باقی مانده است؟ و در پایان نتیجه
+                      را به مشتری اعلام کنید
+                    </div>
+                  </div>
+
                   <div
                     class="card-body exDelay-vendorSend resetForm display-none"
                   >
@@ -631,12 +727,64 @@
                       در این مرحله با مشتری تماس گرفته و پس از اعلام وضعیت
                       سفارش، درخواست ایشان را پرسیده و بعد از انتخاب گزینه
                       مربوطه روی گزینه بعدی کلیک کنید. <br />
-                      <strong>اسکریپ تماس با مشتری:</strong> <br />
-                      "سلام آقا / خانم ......از اسنپ فود تماس میگیرم. بابت تاخیر
-                      پیش آمده در سفارش شما پیگیری با مجموعه انجام و طبق اعلام
-                      ایشان، سفارش تا ... دقیقه آینده به دست شما خواهد رسید.
-                      ضمنا در صورت عدم تمایل به دریافت سفارش امکان کنسل کردن
-                      سفارش نیز وجود دارد." <br />
+                    </div>
+                  </div>
+                  <div class="card-body exGivenTime resetForm display-none">
+                    <div class="card-text text-dark">
+                      <strong>زمان داده شده:</strong><br />
+                      لطفا زمانی که به مشتری اعلام می کنید را از لیست فوق انتخاب
+                      و گزارش تماس نهایی خود را ثبت کنید.
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="card bg-light text-justify exOrderStatus exVendorSendTicket returnedResendTicket exCancel display-none resetForm"
+                  id="expressFormAlert"
+                >
+                  <div
+                    class="card-header d-flex justify-content-between bg-warning text-dark"
+                  >
+                    ثبت تیکت اکسپرس
+                    <i class="glyphicon glyphicon-warning-sign"></i>
+                  </div>
+                  <div class="card-body exOrderStatus resetForm display-none">
+                    <div class="card-text text-dark">
+                      بعد از مشخص شدن وضعیت سفارش حتما مراتب را از طریق تیکت
+                      اکسپرس و با توضیحات کامل به همکاران واحد اکسپرس اطلاع دهید
+                    </div>
+                  </div>
+                  <div
+                    class="card-body exVendorSendTicket display-none resetForm"
+                  >
+                    <div class="card-text text-dark">
+                      وندور امکان ارسال دارد <br />
+                      در این بخش باید روال زیر را انجام دهید: <br />
+                      1: فاکتور به وضعیت ارسال توسط رستوران تغییر دهید. <br />
+                      2: با هماهنگی سرگروه اختلاف قیمت ارسال را اعمال و در صورت
+                      نیاز گزارش خسارت ثبت کنید. <br />
+                      3: مورد را به همراه توضیحات و از طریق تیکت اکسپرس به
+                      همکاران اکسپرس اعلام کنید.
+                    </div>
+                  </div>
+                  <div
+                    class="card-body returnedResendTicket display-none resetForm"
+                  >
+                    <div class="card-text text-dark">
+                      ارسال مجدد توسط پیک اکسپرس <br />
+                      در این بخش باید از مشتری بخواهید اعتبار کیف خود را به
+                      میزان مشخص شده در پنل اکسپرس اضافه کرده و جهت اطلاع به
+                      همکاران اکسپرس تیکت اکسپرس را ثبت کنید.
+                    </div>
+                  </div>
+                  <div class="card-body exCancel display-none resetForm">
+                    <div class="card-text text-dark">
+                      کنسلی سفارش: <br />
+                      در صورتی که مشتری به هیچ وجه مایل به دریافت سفارش نبودند
+                      مورد را با وندور بررسی و در صورت موافقت فاکتور را کنسل
+                      کنید. <br />
+                      در غیر اینصورت درخواست کنسلی را از طریق تیکت اکسپرس به
+                      همکاران واحد اکسپرس اعلام کنید.
                     </div>
                   </div>
                 </div>
@@ -706,6 +854,30 @@
                 ></div>
               </div>
               <div id="d-five" class="display-none resetForm">
+                <div class="line"></div>
+                <div
+                  class="rectangle rounded d-flex flex-column justify-content-center align-items-center text-white"
+                ></div>
+              </div>
+              <div id="d-six" class="display-none resetForm">
+                <div class="line"></div>
+                <div
+                  class="rectangle rounded d-flex flex-column justify-content-center align-items-center text-white"
+                ></div>
+              </div>
+              <div id="d-seven" class="display-none resetForm">
+                <div class="line"></div>
+                <div
+                  class="rectangle rounded d-flex flex-column justify-content-center align-items-center text-white"
+                ></div>
+              </div>
+              <div id="d-eight" class="display-none resetForm">
+                <div class="line"></div>
+                <div
+                  class="rectangle rounded d-flex flex-column justify-content-center align-items-center text-white"
+                ></div>
+              </div>
+              <div id="d-nine" class="display-none resetForm">
                 <div class="line"></div>
                 <div
                   class="rectangle rounded d-flex flex-column justify-content-center align-items-center text-white"
